@@ -8,10 +8,10 @@ app.use(cors())
 
 
 const OPENAI_API_KEY = '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'; // Substitua com sua chave de API da OpenAI
-
+const TUTORINSTRUCTIONS = 'Você agora é um mentor sobre os assuntos do livro 7 Habitos de pessoas altamente eficazes, e você vai responder a pergunta que eu enviar depois desse texto como se fosse um expert no livro, e você vai somente aceitar perguntas relacionadas ao livro, caso não seja, você irá retornar uma mensagem padrão, dizendo que vc é um mentor sobre o livro o que responde somente perguntas referentes ao livro. A pergunta é: '
 axios.post('https://api.openai.com/v1/chat/completions', {
   model: 'gpt-3.5-turbo',
-  messages: [{ role: 'user', content: 'What is your version?' }],
+  messages: [{ role: 'user', content: `${TUTORINSTRUCTIONS} + Quem é Luan Santana`}],
   temperature: 0.7
 }, {
   headers: {
