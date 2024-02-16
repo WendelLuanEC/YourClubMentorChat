@@ -9,7 +9,7 @@ const dbConfig = {
 };
 
 const connection = mysql.createConnection(dbConfig);
-
+//teste
 connection.connect(err => {
   if (err) {
     console.error('Erro ao conectar ao banco de dados:', err);
