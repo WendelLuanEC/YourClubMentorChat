@@ -19,7 +19,7 @@ sequelize.sync().then(() => {
 
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 const TUTORINSTRUCTIONS = process.env.TUTORINSTRUCTIONS;
-const USERANSWER = 'Quem é melhor corinthians ou flamengo?';
+const USERANSWER = 'Explique detalhadamente do que se trata o livro, com mais palavras possíveis';
 
 axios.post('https://api.openai.com/v1/chat/completions', {
   model: 'gpt-3.5-turbo',
