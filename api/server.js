@@ -11,19 +11,23 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-// Sincronizando modelos com o banco de dados
-sequelize.sync().then(() => {
-    console.log('Modelos sincronizados com o banco de dados.');
-}).catch(err => {
-    console.error('Falha ao sincronizar modelos com o banco de dados:', err);
-});
 
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 const TUTORINSTRUCTIONS = process.env.TUTORINSTRUCTIONS;
 
+// Sincronizando modelos com o banco de dados
+sequelize.sync().then(() => {
+  console.log('Modelos sincronizados com o banco de dados.');
+}).catch(err => {
+  console.error('Falha ao sincronizar modelos com o banco de dados:', err);
+});
+
+
+
 // Função para fazer a chamada à API do ChatGPT
 async function fetchChatGPTResponse(userQuestion) {
     try {
+        console.log(userQuestion)
         const response = await axios.post('https://api.openai.com/v1/chat/completions', {
             model: 'gpt-3.5-turbo',
             messages: [{ role: 'user', content: `${TUTORINSTRUCTIONS} ${userQuestion}`}],
