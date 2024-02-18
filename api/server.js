@@ -22,6 +22,8 @@ sequelize.sync().then(() => {
   console.error('Falha ao sincronizar modelos com o banco de dados:', err);
 });
 
+Question.hasMany(Answer, { foreignKey: 'question_id' });
+Answer.belongsTo(Question, { foreignKey: 'question_id' });
 
 
 // Função para fazer a chamada à API do ChatGPT
@@ -68,6 +70,25 @@ app.post('/ask', async (req, res) => {
         res.send({ question: userQuestion, answer: chatResponse });
     } catch (error) {
         res.status(500).send({ error: 'Erro ao processar sua pergunta.' });
+    }
+});
+
+// Nova rota para retornar dados das tabelas Questions e Answers
+app.get('/data', async (req, res) => {
+    try {
+        // Realiza a consulta com join
+        const questionsWithAnswers = await Question.findAll({
+            include: [{
+                model: Answer,
+                required: false // Isso faz um LEFT JOIN. Use `true` para um INNER JOIN.
+            }]
+        });
+
+        // Retorna os dados como uma resposta JSON
+        res.json(questionsWithAnswers);
+    } catch (error) {
+        console.error('Erro ao buscar dados com join:', error);
+        res.status(500).send({ error: 'Erro ao processar a solicitação.' });
     }
 });
 
