@@ -29,7 +29,6 @@ Answer.belongsTo(Question, { foreignKey: 'question_id' });
 // Função para fazer a chamada à API do ChatGPT
 async function fetchChatGPTResponse(userQuestion) {
     try {
-        console.log(userQuestion)
         const response = await axios.post('https://api.openai.com/v1/chat/completions', {
             model: 'gpt-3.5-turbo',
             messages: [{ role: 'user', content: `${TUTORINSTRUCTIONS} ${userQuestion}`}],
