@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { ChatCenteredText, PaperPlaneRight, User } from "phosphor-react";
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -6,6 +7,20 @@ import * as styles from "./css/ChatPage.styles";
 
 import logo_square from "../assets/logo_square.png";
 import logo from "../assets/logo.png";
+=======
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import {
+  CaretDown,
+  ChatCenteredText,
+  PaperPlaneRight,
+  User,
+} from "phosphor-react";
+import * as styles from "./css/ChatPage.styles";
+import logo_square from "../assets/logo_square.png";
+import logo from "../assets/logo.png";
+import Typewriter from "../components/TypingWriter";
+>>>>>>> 0c51d24f70a290f74d82634afd22ccada0f9e5ea
 
 interface Data {
   message: string;
@@ -22,6 +37,10 @@ interface Message {
       question_id: number;
       timestamp: string;
       loading: undefined | boolean;
+<<<<<<< HEAD
+=======
+      typewriterEffect: undefined | boolean;
+>>>>>>> 0c51d24f70a290f74d82634afd22ccada0f9e5ea
     }
   ];
 }
@@ -33,12 +52,17 @@ const ChatPage: React.FC = () => {
     message: "",
   });
   const [messages, setMessages] = useState<Message[]>([]);
+<<<<<<< HEAD
+=======
+  const [showScrollToBottom, setShowScrollToBottom] = useState<boolean>(false);
+>>>>>>> 0c51d24f70a290f74d82634afd22ccada0f9e5ea
 
   const getMessages = async (shouldntLoad: boolean) => {
     if (!shouldntLoad) {
       setLoadingRequest(true);
     }
 
+<<<<<<< HEAD
     await axios
       .get(`http://localhost:3001/data`)
       .then((resp) => {
@@ -51,6 +75,18 @@ const ChatPage: React.FC = () => {
       .catch((err) => {
         console.log(`erro ao pegar dados: ${err}`);
       });
+=======
+    try {
+      const resp = await axios.get(`http://localhost:3001/data`);
+      if (!shouldntLoad) {
+        setMessages(resp.data);
+      } else {
+        setMessages([...messages, resp.data[resp.data.length - 1]]);
+      }
+    } catch (err) {
+      console.log(`erro ao pegar dados: ${err}`);
+    }
+>>>>>>> 0c51d24f70a290f74d82634afd22ccada0f9e5ea
 
     setLoadingRequest(false);
   };
@@ -58,6 +94,7 @@ const ChatPage: React.FC = () => {
   const sendMessage = async () => {
     setLoadingSendMessage(true);
 
+<<<<<<< HEAD
     await axios
       .post(`http://localhost:3001/ask`, {
         question: data.message,
@@ -105,12 +142,106 @@ const ChatPage: React.FC = () => {
         setMessages([...messages, newMessage]);
       });
 
+=======
+    try {
+      await axios.post(`http://localhost:3001/ask`, {
+        question: data.message,
+      });
+
+      const newMessage = {
+        question_id: messages[messages.length - 1].question_id + 1,
+        question_text: data.message,
+        timestamp: new Date().toISOString(),
+        Answers: [
+          {
+            answer_id: messages[messages.length - 1].Answers[0].answer_id + 1,
+            answer_text: "",
+            question_id: messages[messages.length - 1].question_id + 1,
+            timestamp: new Date().toISOString(),
+            loading: true,
+            typewriterEffect: true,
+          },
+        ],
+      };
+
+      setMessages([...messages, newMessage as Message]);
+
+      getMessages(true);
+    } catch (err) {
+      console.log(`erro ao enviar pergunta: ${err}`);
+      console.log(err);
+
+      const newMessage = {
+        question_id: messages[messages.length - 1].question_id + 1,
+        question_text: data.message,
+        timestamp: new Date().toISOString(),
+        Answers: [
+          {
+            answer_id: messages[messages.length - 1].Answers[0].answer_id + 1,
+            answer_text:
+              "Ocorreu um erro ao processar sua mensagem, tente novamente!",
+            question_id: messages[messages.length - 1].question_id + 1,
+            timestamp: new Date().toISOString(),
+            loading: false,
+            typewriterEffect: true,
+          },
+        ],
+      };
+
+      setMessages([...messages, newMessage as Message]);
+    }
+
+>>>>>>> 0c51d24f70a290f74d82634afd22ccada0f9e5ea
     setData({ ...data, message: "" });
     setLoadingSendMessage(false);
   };
 
+<<<<<<< HEAD
   useEffect(() => {
     getMessages(false);
+=======
+  const scrollToBottom = () => {
+    try {
+      const chatContainer = document.getElementById("endChatContainer");
+
+      if (chatContainer) {
+        chatContainer.scrollIntoView({ behavior: "instant", block: "end" });
+      }
+    } catch (e) {
+      console.log(`erro ao ir para final do chat: ${e}`);
+    }
+  };
+
+  useEffect(() => {
+    const chatContent = document.getElementById("chatContainerId");
+
+    const handleScroll = () => {
+      const positionY = chatContent!.scrollTop;
+
+      if (positionY >= 1 && positionY <= 10000) {
+        return setShowScrollToBottom(true);
+      }
+
+      setShowScrollToBottom(false);
+    };
+
+    if (chatContent) {
+      chatContent.addEventListener("scroll", handleScroll, { passive: true });
+
+      return () => {
+        chatContent.removeEventListener("scroll", handleScroll);
+      };
+    }
+  }, []);
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
+  useEffect(() => {
+    getMessages(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+>>>>>>> 0c51d24f70a290f74d82634afd22ccada0f9e5ea
   }, []);
 
   return (
@@ -129,7 +260,11 @@ const ChatPage: React.FC = () => {
       </styles.Sidebar>
 
       <styles.ChatContainer>
+<<<<<<< HEAD
         <styles.ChatContent>
+=======
+        <styles.ChatContent id="chatContainerId">
+>>>>>>> 0c51d24f70a290f74d82634afd22ccada0f9e5ea
           {!loadingRequest && messages.length === 0 && (
             <styles.NoMessages>
               <img src={logo} alt="logo yourclub" />
@@ -170,7 +305,21 @@ const ChatPage: React.FC = () => {
                             )}
 
                             {!message.Answers[0].loading && (
+<<<<<<< HEAD
                               <p>{message.Answers[0].answer_text}</p>
+=======
+                              <>
+                                {message.Answers[0].typewriterEffect && (
+                                  <Typewriter
+                                    text={message.Answers[0].answer_text}
+                                  />
+                                )}
+
+                                {!message.Answers[0].typewriterEffect && (
+                                  <p>{message.Answers[0].answer_text}</p>
+                                )}
+                              </>
+>>>>>>> 0c51d24f70a290f74d82634afd22ccada0f9e5ea
                             )}
                           </div>
                         </styles.MessageResponse>
@@ -179,6 +328,17 @@ const ChatPage: React.FC = () => {
                   })}
                 </styles.LayoutMessages>
               )}
+<<<<<<< HEAD
+=======
+
+              {showScrollToBottom && (
+                <styles.Arrow onClick={scrollToBottom}>
+                  <CaretDown size={30} color="#EFD64B" />
+                </styles.Arrow>
+              )}
+
+              <div id="endChatContainer"></div>
+>>>>>>> 0c51d24f70a290f74d82634afd22ccada0f9e5ea
             </styles.MessagesContainer>
           )}
         </styles.ChatContent>

@@ -121,6 +121,10 @@ export const NoMessages = styled.div`
 
 export const MessagesContainer = styled.div`
   overflow-y: auto;
+<<<<<<< HEAD
+=======
+  position: relative;
+>>>>>>> 0c51d24f70a290f74d82634afd22ccada0f9e5ea
 `;
 
 export const LayoutMessages = styled.div`
@@ -178,3 +182,29 @@ export const MessageQuestion = styled.div`
 `;
 
 export const MessageResponse = styled(MessageQuestion)``;
+<<<<<<< HEAD
+=======
+
+export const Arrow = styled.div`
+  width: 50px;
+  height: 50px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #001d7e;
+  transition: 0.2s all;
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  transform: translate(-100%, -200%);
+  z-index: 10;
+  opacity: 0.5;
+
+  &:hover {
+    cursor: pointer;
+    background-color: #011a6b;
+    opacity: 0.8;
+  }
+`;
+>>>>>>> 0c51d24f70a290f74d82634afd22ccada0f9e5ea
