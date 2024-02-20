@@ -23,7 +23,6 @@ Answer.belongsTo(Question, { foreignKey: "question_id" });
 
 // Criando a rota /ask
 app.post("/ask", async (req, res) => {
-  // Desestruturação correta das propriedades de req.body
 
 const userQuestion = req.body.question;
 const assunto = req.body.assunto;
