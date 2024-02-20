@@ -1,5 +1,5 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('../sequelize'); // ajuste o caminho conforme necessário
+import sequelize from '../sequelize.js';
+import  DataTypes  from 'sequelize';
 
 const Question = sequelize.define('Question', {
     question_id: {
@@ -20,4 +20,4 @@ const Question = sequelize.define('Question', {
     tableName: 'questions'
 });
 
-module.exports = Question;
+export default Question;

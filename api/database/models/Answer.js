@@ -1,6 +1,6 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('../sequelize'); // ajuste o caminho conforme necessário
-const Question = require('./Question'); // Importa o modelo Question
+import sequelize from '../sequelize.js';
+import  DataTypes  from 'sequelize';
+import Question from './Question.js'; // Importa o modelo Question
 
 const Answer = sequelize.define('Answer', {
     answer_id: {
@@ -29,4 +29,4 @@ const Answer = sequelize.define('Answer', {
     tableName: 'answers'
 });
 
-module.exports = Answer;
+export default Answer;

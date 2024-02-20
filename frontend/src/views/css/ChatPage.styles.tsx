@@ -121,10 +121,7 @@ export const NoMessages = styled.div`
 
 export const MessagesContainer = styled.div`
   overflow-y: auto;
-<<<<<<< HEAD
-=======
   position: relative;
->>>>>>> 0c51d24f70a290f74d82634afd22ccada0f9e5ea
 `;
 
 export const LayoutMessages = styled.div`
@@ -182,8 +179,6 @@ export const MessageQuestion = styled.div`
 `;
 
 export const MessageResponse = styled(MessageQuestion)``;
-<<<<<<< HEAD
-=======
 
 export const Arrow = styled.div`
   width: 50px;
@@ -207,4 +202,3 @@ export const Arrow = styled.div`
     opacity: 0.8;
   }
 `;
->>>>>>> 0c51d24f70a290f74d82634afd22ccada0f9e5ea
