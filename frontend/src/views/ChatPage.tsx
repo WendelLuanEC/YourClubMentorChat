@@ -6,11 +6,15 @@ import {
   PaperPlaneRight,
   User,
 } from "phosphor-react";
+
 import * as styles from "./css/ChatPage.styles";
+
 import logo_square from "../assets/logo_square.png";
 import logo from "../assets/logo.png";
-import Typewriter from "../components/TypingWriter";
 
+import Typewriter from "../components/TypingWriter";
+import ModalPreview from "../components/ModalPreview";
+import FormattedText from "../utils/formatText";
 interface Data {
   message: string;
 }
@@ -31,6 +35,22 @@ interface Message {
   ];
 }
 
+interface DataItems {
+  first: {
+    basic: boolean;
+    intermediate: boolean;
+    advanced: boolean;
+  };
+  second: {
+    technician: boolean;
+    informal: boolean;
+  };
+  third: {
+    topics: boolean;
+    running_text: boolean;
+  };
+}
+
 const ChatPage: React.FC = () => {
   const [loadingRequest, setLoadingRequest] = useState<boolean>(true);
   const [loadingSendMessage, setLoadingSendMessage] = useState<boolean>(false);
@@ -39,6 +59,60 @@ const ChatPage: React.FC = () => {
   });
   const [messages, setMessages] = useState<Message[]>([]);
   const [showScrollToBottom, setShowScrollToBottom] = useState<boolean>(false);
+  const [startPositionY, setStartPositionY] = useState<{
+    state: boolean;
+    number: number;
+  }>({
+    state: false,
+    number: 0,
+  });
+
+  // modal preview
+  const [seeModalPreview, setSeeModalPreview] = useState<boolean>(false);
+  const [dataSettings, setDataSettings] = useState<DataItems>({
+    first: { basic: false, intermediate: false, advanced: false },
+    second: { technician: false, informal: false },
+    third: { topics: false, running_text: false },
+  });
+
+  // logica inputs modal settings user
+  const handleConcludeSettings = (data: DataItems) => {
+    setDataSettings(data);
+    localStorage.setItem("settings_preferences_user", JSON.stringify(data));
+    setSeeModalPreview(false);
+  };
+
+  const verifySettingsUser = () => {
+    const data = localStorage.getItem("settings_preferences_user");
+
+    // Se não houver dados no localStorage, exiba o modal novamente
+    if (!data) {
+      return setSeeModalPreview(true);
+    }
+
+    if (data) {
+      try {
+        const parsedData = JSON.parse(data);
+
+        // Verifique se as chaves do objeto do localStorage correspondem às chaves de DataSettings
+        const isValid =
+          parsedData &&
+          Object.keys(parsedData).every((key) =>
+            Object.keys(dataSettings as DataItems).includes(key)
+          );
+
+        if (!isValid) {
+          localStorage.removeItem("settings_preferences_user");
+          return setSeeModalPreview(true);
+        } else {
+          setDataSettings(parsedData);
+        }
+      } catch (error) {
+        console.error("Erro ao analisar os dados do localStorage:", error);
+        setSeeModalPreview(true);
+      }
+    }
+  };
 
   const getMessages = async (shouldntLoad: boolean) => {
     if (!shouldntLoad) {
@@ -47,6 +121,7 @@ const ChatPage: React.FC = () => {
 
     try {
       const resp = await axios.get(`http://localhost:3001/data`);
+      console.log(resp.data[resp.data.length - 1]);
       if (!shouldntLoad) {
         setMessages(resp.data);
       } else {
@@ -63,8 +138,35 @@ const ChatPage: React.FC = () => {
     setLoadingSendMessage(true);
 
     try {
+      let expertiseLevel;
+      let languageType;
+      let typeFormatted;
+
+      if (dataSettings.first.advanced) {
+        expertiseLevel = "avançado";
+      } else if (dataSettings.first.basic) {
+        expertiseLevel = "básico";
+      } else if (dataSettings.first.intermediate) {
+        expertiseLevel = "intermediário";
+      }
+
+      if (dataSettings.second.informal) {
+        languageType = "informal";
+      } else if (dataSettings.second.technician) {
+        languageType = "técnico";
+      }
+
+      if (dataSettings.third.topics) {
+        typeFormatted = "tópicos";
+      } else if (dataSettings.third.running_text) {
+        typeFormatted = "texto corrido";
+      }
+
       await axios.post(`http://localhost:3001/ask`, {
-        question: data.message,
+        userQuestion: data.message,
+        expertiseLevel: expertiseLevel,
+        languageType: languageType,
+        typeFormatted: typeFormatted,
       });
 
       const newMessage = {
@@ -132,7 +234,15 @@ const ChatPage: React.FC = () => {
     const handleScroll = () => {
       const positionY = chatContent!.scrollTop;
 
-      if (positionY >= 1 && positionY <= 10000) {
+      if (startPositionY.state === false) {
+        setStartPositionY({
+          ...startPositionY,
+          state: true,
+          number: positionY,
+        });
+      }
+
+      if (positionY >= 1 && positionY < startPositionY.number - 100) {
         return setShowScrollToBottom(true);
       }
 
@@ -146,6 +256,7 @@ const ChatPage: React.FC = () => {
         chatContent.removeEventListener("scroll", handleScroll);
       };
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -154,11 +265,18 @@ const ChatPage: React.FC = () => {
 
   useEffect(() => {
     getMessages(false);
+    verifySettingsUser();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <styles.Container>
+      {seeModalPreview && (
+        <styles.Overlay onClick={() => setSeeModalPreview(false)}>
+          <ModalPreview handleConcludeSettings={handleConcludeSettings} />
+        </styles.Overlay>
+      )}
+
       <styles.Sidebar>
         <img src={logo_square} alt="logo yourclub" />
 
@@ -222,7 +340,9 @@ const ChatPage: React.FC = () => {
                                 )}
 
                                 {!message.Answers[0].typewriterEffect && (
-                                  <p>{message.Answers[0].answer_text}</p>
+                                  <FormattedText
+                                    text={message.Answers[0].answer_text}
+                                  />
                                 )}
                               </>
                             )}
