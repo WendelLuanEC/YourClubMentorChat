@@ -120,7 +120,7 @@ const ChatPage: React.FC = () => {
     }
 
     try {
-      const resp = await axios.get(`http://localhost:1003/data`);
+      const resp = await axios.get(`http://189.126.105.222:1003/data`);
       console.log(resp.data[resp.data.length - 1]);
       if (!shouldntLoad) {
         setMessages(resp.data);
@@ -162,7 +162,7 @@ const ChatPage: React.FC = () => {
         typeFormatted = "texto corrido";
       }
 
-      await axios.post(`http://localhost:1003/ask`, {
+      await axios.post(`http://189.126.105.222:1003/ask`, {
         userQuestion: data.message,
         expertiseLevel: expertiseLevel,
         languageType: languageType,
