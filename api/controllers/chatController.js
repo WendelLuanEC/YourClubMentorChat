@@ -1,6 +1,10 @@
-import axios from "axios";
+import OpenAI from 'openai';
 import { OPENAI_API_KEY } from "../config/index.js";
 import getInstructions from "../config/instructions.js";
+
+const openai = new OpenAI({
+  apiKey: OPENAI_API_KEY // This is the default and can be omitted
+});
 
 export async function fetchChatGPTResponse(
   question,
@@ -8,6 +12,7 @@ export async function fetchChatGPTResponse(
   languageType,
   typeFormatted
 ) {
+
   const instrucao = getInstructions(
     question,
     expertiseLevel,
@@ -15,26 +20,13 @@ export async function fetchChatGPTResponse(
     typeFormatted
   );
 
-  console.log(`instrução: ${instrucao}`);
-
   try {
-    const response = await axios.post(
-      "https://api.openai.com/v1/chat/completions",
-      {
-        model: "gpt-3.5-turbo",
-        messages: [{ role: "user", content: `${instrucao} ${question}` }],
-        temperature: 0.7,
-      },
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${OPENAI_API_KEY}`,
-          "OpenAI-Organization": 'org-5wwmS0Gdvnr4XIohz3YQS8Ko',
-        },
-      }
-    );
-    
-    return response.data.choices[0].message.content;
+    const params = {
+      messages: [{ role: 'user', content: `${instrucao}` }],
+      model: 'gpt-3.5-turbo',
+    };
+    const chatCompletion = (await openai.chat.completions.create(params)).choices[0].message;
+    return chatCompletion.content;
   } catch (error) {
     console.error("Erro ao buscar resposta do ChatGPT:", error);
     throw error;
