@@ -79,5 +79,5 @@ app.get("/data", async (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`Servidor rodando na porta ${2000}`);
+  console.log(`Servidor rodando na porta ${1003}`);
 });
