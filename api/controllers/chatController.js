@@ -33,6 +33,7 @@ export async function fetchChatGPTResponse(
     console.log("Entrou no chat controler")
     return response.data.choices[0].message.content;
   } catch (error) {
+    console.log(error)
     console.error("Erro ao buscar resposta do ChatGPT:", error);
     throw error;
   }
