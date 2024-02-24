@@ -3,7 +3,7 @@ import { OPENAI_API_KEY } from "../config/index.js";
 import getInstructions from "../config/instructions.js";
 
 const openai = new OpenAI({
-  apiKey: `${OPENAI_API_KEY}` // This is the default and can be omitted
+  apiKey: OPENAI_API_KEY // This is the default and can be omitted
 });
 
 export async function fetchChatGPTResponse(
