@@ -31,8 +31,6 @@ app.post("/ask", async (req, res) => {
   const languageType = req.body.languageType;
   const typeFormatted = req.body.typeFormatted;
 
-  console.log("Atualizou")
-
   if (!userQuestion) {
     return res.status(400).send({ error: "Pergunta não fornecida." });
   }
