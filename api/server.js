@@ -25,7 +25,6 @@ Answer.belongsTo(Question, { foreignKey: "question_id" });
 
 // Criando a rota /ask
 app.post("/ask", async (req, res) => {
-  console.log(req.body);
   const userQuestion = req.body.userQuestion;
   const expertiseLevel = req.body.expertiseLevel;
   const languageType = req.body.languageType;
@@ -47,7 +46,7 @@ app.post("/ask", async (req, res) => {
     const question = await Question.create({ question_text: userQuestion });
     const answer = await Answer.create({
       question_id: question.question_id,
-      answer_text: chatResponse,
+      answer_text: chatResponse.content,
     });
 
     //Retorna a resposta para o usuário
@@ -79,5 +78,5 @@ app.get("/data", async (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`Servidor rodando na porta ${2000}`);
+  console.log(`Servidor rodando na porta ${1003}`);
 });
