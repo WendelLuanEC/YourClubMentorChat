@@ -1,9 +1,10 @@
 import OpenAI from 'openai';
-import { OPENAI_API_KEY } from "../config/index.js";
 import getInstructions from "../config/instructions.js";
+import { config } from 'dotenv';
+config();
 
 const openai = new OpenAI({
-  apiKey: OPENAI_API_KEY // This is the default and can be omitted
+  apiKey: process.env.OPENAI_API_KEY // This is the default and can be omitted
 });
 
 export async function fetchChatGPTResponse(
