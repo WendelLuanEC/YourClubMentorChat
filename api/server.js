@@ -41,7 +41,7 @@ app.post("/ask", async (req, res) => {
       languageType,
       typeFormatted
     );
-      console.log(chatResponse)
+    console.log(chatResponse);
     // Salva a pergunta e a resposta no banco de dados
     const question = await Question.create({ question_text: userQuestion });
     const answer = await Answer.create({
